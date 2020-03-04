@@ -32,7 +32,11 @@ function findMatches(wordsToMatch, cities) {
 };
 
 function displayMatches() {
-  const matchArray = findMatches()
+  const matchArray = findMatches(this.value, cities)
+  const html = matchArray.map(place => {
+    return ``;
+  })
+  //console.log(matchArray);
 }
 
 const searchInput = document.querySelector('.search');
