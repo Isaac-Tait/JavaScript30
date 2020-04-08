@@ -30,6 +30,34 @@
   const itemsList = document.querySelector('.plates');
   const items = [];
 
+function addItem(e) {
+  e.preventDefault();
+  const text = (this.querySelector('[name=item]')).value
+  const item = {
+    text: text, // or ES6 syntax would be just 'text'
+    done: false
+  };
+  items.push(item);
+  populateList(items, itemsList);
+  this.reset();
+}
+
+// Phew this is getting complicated! 
+
+function populateList(plates = [], platesList) {
+  platesList.innerHTML = plates.map((plate, i) => {
+    return `
+      <li>
+        <label>${plate.text}</label>
+      </li>
+    `;
+  }).join(''); /*map returns an array, but setting innerHTML we just need one big string. 
+              .join will take the array that .map makes one big string, 
+              so if we have 6 or 7 items it won't give us an array with multiple strings but rather just give us one big string */
+}
+
+  addItems.addEventListener('submit', addItem);
+
 </script>
 
 
