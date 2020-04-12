@@ -55,12 +55,19 @@ h2 {
   cursor: pointer;
 }
 
+/*
+The following three .plates affect the checkbox on the main page:
+1) hides the default checkbox
+2) Sets the marker when the item is not done
+3) Sets the marker when the item is done 
+*/
+
 .plates input {
   display: none;
 }
 
 .plates input + label:before {
-  content: '⬜️';
+  content: '🌋';
   margin-right: 10px;
 }
 

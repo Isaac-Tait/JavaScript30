@@ -28,7 +28,7 @@
 <script>
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
-  const items = [];
+  const items = JSON.parse(localStorage.getItem('items')) || [];
 
 function addItem(e) {
   e.preventDefault();
@@ -37,9 +37,12 @@ function addItem(e) {
     text: text, // or ES6 syntax would be just 'text'
     done: false
   };
+
   items.push(item);
   populateList(items, itemsList);
+  localStorage.setItem('items', JSON.stringify(items));
   this.reset();
+
 }
 
 // Phew this is getting complicated! 
@@ -48,16 +51,30 @@ function populateList(plates = [], platesList) {
   platesList.innerHTML = plates.map((plate, i) => {
     return `
       <li>
-        <label>${plate.text}</label>
+      <input type="checkbox" data-index=${i} id="item${i}" ${plate.done ? 'checked' : ''}> 
+        <label for="item${i}">${plate.text}</label>
       </li>
-    `;
+    `; // For CSS styling see style.css line 58
+
   }).join(''); /*map returns an array, but setting innerHTML we just need one big string. 
               .join will take the array that .map makes one big string, 
               so if we have 6 or 7 items it won't give us an array with multiple strings but rather just give us one big string */
 }
 
-  addItems.addEventListener('submit', addItem);
+function toggleDone(e) {
+  if(!e.target.matches('input')) return;
+  const el = e.target; //This line will prevent e from firing unless you click and input element
+  //console.log(el.dataset.index); //This line will tell you what object has been selected, kinda cool 😎
+  const index = el.dataset.index;
+    items[index].done = !items[index].done;
+  localStorage.setItem('items', JSON.stringify(items));
+  populateList(items, itemsList);
+}
 
+  addItems.addEventListener('submit', addItem);
+  itemsList.addEventListener('click', toggleDone);
+
+  populateList(items, itemsList);
 </script>
 
 
