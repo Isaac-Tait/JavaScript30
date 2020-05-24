@@ -187,18 +187,22 @@
 
     const seconds = timeNodes
       .map(node => node.dataset.time)
+      // I wanted to see if the variable names were JS specific. However, it would appear you can name them whatever you want (although my name is not very clear on what its purpose is)
       .map(doesThisMatter => {
-        const [mins, secs] = doesThisMatter.split(':').map(parseFloat);
+        const [mins, secs] = doesThisMatter.split(':').map(parseFloat); //parseFloat changes the result from a string into a number
         return (mins * 60) + secs;
       })
+      // .reduce reduces seconds into the variables total & vidSeconds then adds them together
       .reduce((total, vidSeconds) => total + vidSeconds)
 
       let secondsLeft = seconds
-      const hours = Math.floor(secondsLeft / 3600);
+      const hours = Math.floor(secondsLeft / 3600); // 3600 = 60 * 60
       secondsLeft = secondsLeft % 3600;
 
       const mins = Math.floor(secondsLeft / 60);
       secondsLeft = secondsLeft % 60;
+
+      console.log(hours, mins, secondsLeft); //will return 4 59 0 (or 4hours 59 minutes 0 seconds)
 
 </script>
 </body>
