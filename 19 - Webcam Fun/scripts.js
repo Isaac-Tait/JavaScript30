@@ -24,6 +24,18 @@ function paintToCanvas() {
 
 return setInterval(() => {
         ctx.drawImage(video, 0, 0, width, height)
+        //! Take the pixels out
+        let pixels = ctx.getImageData(0, 0, width, height)
+        //! Mess with the pixels
+        // pixels = redEffect(pixels); //Makes the photo a greenish yellow
+
+        //pixels = rgbSplit(pixels); // Makes the photo look like a bad acid trip
+        //ctx.globalAlpha = 0.85
+
+        pixels = greenScreen(pixels); // Makes the image a sudo-green screen
+
+        //! Put the pixels back
+        ctx.putImageData(pixels, 0, 0)
     }, 300)
 };
 
@@ -39,8 +51,51 @@ function takePhoto() {
     link.href = data;
     link.setAttribute('download', 'A sexy well hung man!');
     link.innerHTML = `<img src="${data}" alt="A sexy well hung man!" />`
-    link.textContent = 'Download Image'
     strip.insertBefore(link, strip.firstChild);
+}
+
+function redEffect(pixels) {
+    for (let i = 0; i < pixels.data.length; i+=4) {
+        pixels.data[i + 0] = pixels.data[i + 0] + 120 //! Red
+        pixels.data[i + 1] = pixels.data[i + 1] * 3.14 //* Green
+        pixels.data[i + 2] = pixels.data[i + 2] - 69 //? Blue
+    }
+    return pixels;
+}
+
+function rgbSplit(pixels) {
+    for (let i = 0; i < pixels.data.length; i+=4) {
+        pixels.data[i - 150] = pixels.data[i + 0] //! Red
+        pixels.data[i + 100] = pixels.data[i + 1] //* Green
+        pixels.data[i - 150] = pixels.data[i + 2] //? Blue
+    }
+    return pixels;
+}
+
+function greenScreen(pixels) {
+    const levels = {};
+
+    document.querySelectorAll('.rgb input').forEach((input) => {
+      levels[input.name] = input.value;
+    });
+  
+    for (i = 0; i < pixels.data.length; i = i + 4) {
+      red = pixels.data[i + 0];
+      green = pixels.data[i + 1];
+      blue = pixels.data[i + 2];
+      alpha = pixels.data[i + 3];
+  
+      if (red >= levels.rmin
+        && green >= levels.gmin
+        && blue >= levels.bmin
+        && red <= levels.rmax
+        && green <= levels.gmax
+        && blue <= levels.bmax) {
+        // take it out!
+        pixels.data[i + 3] = 0;
+      }
+    }
+    return pixels;
 }
 
 getVideo();
