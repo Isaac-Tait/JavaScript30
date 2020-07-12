@@ -40,8 +40,28 @@
   }
 </style>
 
-<button></button>
+<button>Click Me</button>
 <script>
+  const divs = document.querySelectorAll('div');
+  const button = document.querySelector('button');
+
+  function logText(e) {
+    console.log(this.classList.value)
+    e.stopPropagation(); // This line will prevent the click from propagating through 
+  };
+
+  //document.body.addEventListener('click', logText) With this un-commented the click will propagate all the way up
+
+  divs.forEach(div => div.addEventListener('click', logText, {
+    capture: false, // If set to true it will start from the top and go down...
+    once: true
+  }));
+
+  button.addEventListener('click', () => {
+    console.log('Click')
+  }, {
+    once: true // This will allow the user to only click the button once per page reload.
+  });
 
 </script>
 </body>
