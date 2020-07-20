@@ -230,7 +230,11 @@
 
   function handleEnter() {
     this.classList.add('trigger-enter');
-    setTimeout(() => this.classList.add('trigger-enter-active'), 222); // With this line setup as an arrow function this inherits the classList from the parent (which is the line above)
+    setTimeout(() => {
+      if(this.classList.contains('trigger-enter')) {
+        this.classList.add('trigger-enter-active')
+      }
+    }, 222); // With this line setup as an arrow function this inherits the classList from the parent (which is 232 line)
     background.classList.add('open')
     //console.log("Enter")
 
