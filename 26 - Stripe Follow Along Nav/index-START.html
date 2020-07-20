@@ -142,6 +142,10 @@
     display: none;
   }
 
+  /* 
+    By stepping the class below you can create an animation effect!
+  */
+
   .trigger-enter .dropdown {
     display: block;
   }
@@ -157,7 +161,7 @@
     background: #fff;
     border-radius: 4px;
     box-shadow: 0 50px 100px rgba(50,50,93,.1), 0 15px 35px rgba(50,50,93,.15), 0 5px 15px rgba(0,0,0,.1);
-    transition: all 0.3s, opacity 0.1s, transform 0.2s;
+    transition: all 0.8s, opacity 0.2s, transform 0.9s; /* Changing the times of all, opacity, & transform will alter the animation effect*/
     transform-origin: 50% 0;
     display: flex;
     justify-content: center;
@@ -220,6 +224,43 @@
 </style>
 
 <script>
+  const triggers = document.querySelectorAll('.cool > li');
+  const background = document.querySelector('.dropdownBackground');
+  const nav = document.querySelector('.top');
+
+  function handleEnter() {
+    this.classList.add('trigger-enter');
+    setTimeout(() => this.classList.add('trigger-enter-active'), 222); // With this line setup as an arrow function this inherits the classList from the parent (which is the line above)
+    background.classList.add('open')
+    //console.log("Enter")
+
+    const dropdown = this.querySelector('.dropdown');
+    const dropdownCoords = dropdown.getBoundingClientRect(); // Will spit out the pixel coordinates of the item that is being hovered by the mouse
+    //console.log(dropdownCoords);
+    const navCoords = nav.getBoundingClientRect(); // Will return the pixel coordinates of the actual nav item no matter where it is on the page
+    //console.log(navCoords); 
+
+    const coords = {
+      height: dropdownCoords.height,
+      width: dropdownCoords.width,
+      top: dropdownCoords.top - navCoords.top,
+      left: dropdownCoords.left - navCoords.left
+    }
+    background.style.setProperty('width', `${coords.width}px`)
+    background.style.setProperty('height', `${coords.height}px`)
+    background.style.setProperty('transform', `translate(${coords.left}px, ${coords.top}px)`
+      );
+  };
+
+  function handleLeave() {
+    this.classList.remove('trigger-enter', 'trigger-enter-active')
+    background.classList.remove('open')
+    //console.log("Leave")
+  };
+
+  triggers.forEach(trigger => trigger.addEventListener('mouseenter', handleEnter));
+  triggers.forEach(trigger => trigger.addEventListener('mouseleave', handleLeave));
+
 </script>
 
 </body>
